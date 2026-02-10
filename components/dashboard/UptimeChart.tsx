@@ -53,7 +53,7 @@ export default function UptimeChart() {
                             borderRadius: '8px',
                             color: '#fff',
                         }}
-                        formatter={(value: number) => [`${value.toFixed(2)}%`, 'Uptime']}
+                        formatter={(value: number | undefined) => value !== undefined ? [`${value.toFixed(2)}%`, 'Uptime'] : ['N/A', 'Uptime']}
                     />
                     <Area
                         type="monotone"
