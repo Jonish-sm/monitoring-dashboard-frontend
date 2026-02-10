@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# API Monitoring Dashboard - Frontend
 
-## Getting Started
+Production-ready API monitoring dashboard built with Next.js 14+, TypeScript, Tailwind CSS, and Shadcn UI.
 
-First, run the development server:
+## 🚀 Quick Start
 
+### Prerequisites
+- Node.js 20+
+- Backend API running at `http://localhost:3001`
+
+### Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Setup
+Create `.env.local`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Development
+```bash
+npm run dev
+```
+Access at [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Production
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 🎯 Features
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ **Real-time Monitoring**: Auto-refresh endpoints and alerts every 10-15 seconds
+- ✅ **Full CRUD**: Create, update, delete endpoints with validation
+- ✅ **Analytics Dashboard**: Stats cards, uptime charts, live status grid
+- ✅ **Alert Management**: Filter, acknowledge, and track alerts
+- ✅ **Health Logs**: View all health check logs with search and pagination
+- ✅ **Dark Mode**: Premium glassmorphism design with vibrant gradients
+- ✅ **Animations**: Smooth Framer Motion transitions
+- ✅ **Responsive**: Mobile, tablet, and desktop layouts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📁 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js 16** with App Router
+- **TypeScript** with strict type checking
+- **Tailwind CSS 4** for styling
+- **Shadcn UI** components
+- **TanStack Query** for data fetching
+- **React Hook Form + Zod** for validation
+- **Recharts** for data visualization
+- **Framer Motion** for animations
 
-## Deploy on Vercel
+## 📱 Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Dashboard** (`/`) - Overview with stats, charts, and live status
+- **Endpoints** (`/endpoints`) - Manage API endpoints (CRUD)
+- **Endpoint Detail** (`/endpoints/[id]`) - Analytics and health logs
+- **Alerts** (`/alerts`) - Alert management with filtering
+- **Logs** (`/logs`) - Health check logs
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Project Structure
+
+```
+app/               # Next.js pages (App Router)
+components/        # React components
+  ├── ui/         # Shadcn UI components
+  ├── layout/     # Layout components (Sidebar)
+  ├── dashboard/  # Dashboard-specific components
+  ├── endpoints/  # Endpoint-related components
+  └── shared/     # Reusable components
+hooks/            # React Query hooks
+lib/              # Utilities and API clients
+  ├── api/       # API service functions
+  ├── types/     # TypeScript types
+  └── utils/     # Helper functions
+```
+
+## 🎨 Design
+
+- Dark mode with slate background (#0F172A)
+- Glassmorphism effects on cards
+- Gradient backgrounds (blue→purple)
+- Pulsating status indicators
+- Smooth hover effects and transitions
+
+## 🔧 Configuration
+
+Polling intervals in `lib/constants.ts`:
+- Endpoints: 10 seconds
+- Alerts: 15 seconds
+- Health Logs: 30 seconds
+
+## 📄 License
+
+MIT
