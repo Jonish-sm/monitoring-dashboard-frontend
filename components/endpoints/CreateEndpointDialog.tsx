@@ -40,12 +40,12 @@ export default function CreateEndpointDialog() {
     const [open, setOpen] = useState(false);
     const createEndpoint = useCreateEndpoint();
 
-    const form = useForm<CreateEndpointFormData>({
+    const form = useForm({
         resolver: zodResolver(createEndpointSchema),
         defaultValues: {
             name: '',
             url: '',
-            method: 'GET',
+            method: 'GET' as const,
             expectedStatus: 200,
             checkInterval: 5,
         },
@@ -53,7 +53,13 @@ export default function CreateEndpointDialog() {
 
     const onSubmit = async (data: CreateEndpointFormData) => {
         try {
-            await createEndpoint.mutateAsync(data);
+            const submitData = {
+                ...data,
+                headers: data.headers ? Object.fromEntries(
+                    Object.entries(data.headers).map(([key, value]) => [key, String(value)])
+                ) : undefined,
+            };
+            await createEndpoint.mutateAsync(submitData);
             toast.success('Endpoint created successfully');
             form.reset();
             setOpen(false);
@@ -70,7 +76,7 @@ export default function CreateEndpointDialog() {
                     Add Endpoint
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] bg-slate-900 border-slate-800">
+            <DialogContent className="sm:max-w-125 bg-slate-900 border-slate-800">
                 <DialogHeader>
                     <DialogTitle className="text-white">Add New Endpoint</DialogTitle>
                     <DialogDescription className="text-slate-400">

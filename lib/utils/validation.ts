@@ -9,7 +9,7 @@ export const createEndpointSchema = z.object({
     method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).optional().default('GET'),
     expectedStatus: z.number().min(100).max(599).optional().default(200),
     checkInterval: z.number().min(1).optional().default(5),
-    headers: z.record(z.string()).optional(),
+    headers: z.record(z.string(), z.string()).optional(),
 });
 
 export type CreateEndpointFormData = z.infer<typeof createEndpointSchema>;
@@ -23,7 +23,7 @@ export const updateEndpointSchema = z.object({
     method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).optional(),
     expectedStatus: z.number().min(100).max(599).optional(),
     checkInterval: z.number().min(1).optional(),
-    headers: z.record(z.string()).optional(),
+    headers: z.record(z.string(), z.string()).optional(),
     isActive: z.boolean().optional(),
 });
 
