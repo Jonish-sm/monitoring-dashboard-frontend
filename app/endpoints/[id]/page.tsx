@@ -14,6 +14,7 @@ import { TIME_RANGES } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 interface PageProps {
     params: {
@@ -22,14 +23,16 @@ interface PageProps {
 }
 
 export default function EndpointDetailPage({ params }: PageProps) {
+    const paramsData = useParams()
+    const id = typeof paramsData.id === 'string' ? paramsData.id : Array.isArray(paramsData.id) ? paramsData.id[0] : '';
     const [timeRange, setTimeRange] = useState(24);
-    const { data: endpoint, isLoading: endpointLoading } = useEndpoint(params.id);
+    const { data: endpoint, isLoading: endpointLoading } = useEndpoint(id);
     const { data: analytics, isLoading: analyticsLoading } = useEndpointAnalytics(
-        params.id,
+        id,
         timeRange
     );
-    const { data: healthLogs } = useEndpointHealthLogs(params.id, 50);
-    const { data: alerts } = useEndpointAlerts(params.id, 10);
+    const { data: healthLogs } = useEndpointHealthLogs(id, 50);
+    const { data: alerts } = useEndpointAlerts(id, 10);
 
     if (endpointLoading || analyticsLoading) {
         return (
