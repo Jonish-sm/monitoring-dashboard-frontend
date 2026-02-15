@@ -9,6 +9,7 @@ interface GetHealthLogsParams {
 interface GetEndpointLogsParams {
     endpointId: string;
     limit?: number;
+    offset?: number;
 }
 
 interface GetAnalyticsParams {
@@ -28,10 +29,10 @@ export const healthLogsApi = {
     /**
      * Get health logs for a specific endpoint
      */
-    getByEndpoint: async ({ endpointId, limit }: GetEndpointLogsParams): Promise<HealthLog[]> => {
+    getByEndpoint: async ({ endpointId, limit, offset }: GetEndpointLogsParams): Promise<HealthLog[]> => {
         const { data } = await apiClient.get<HealthLog[]>(
             `/health-logs/endpoint/${endpointId}`,
-            { params: { limit } }
+            { params: { limit, offset } }
         );
         return data;
     },

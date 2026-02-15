@@ -1,12 +1,24 @@
 import { apiClient } from './client';
 import { Endpoint, CreateEndpointDto, UpdateEndpointDto } from '@/lib/types';
 
+interface GetAllParams {
+    limit?: number;
+    offset?: number;
+    endpointName?: string;
+}
+
 export const endpointsApi = {
     /**
-     * Get all endpoints
+     * Get all endpoints with optional pagination and name filter
      */
-    getAll: async (): Promise<Endpoint[]> => {
-        const { data } = await apiClient.get<Endpoint[]>('/endpoints');
+    getAll: async (params?: GetAllParams): Promise<Endpoint[]> => {
+        const { data } = await apiClient.get<Endpoint[]>('/endpoints', {
+            params: {
+                limit: params?.limit,
+                offset: params?.offset,
+                endpointName: params?.endpointName,
+            },
+        });
         return data;
     },
 

@@ -16,10 +16,10 @@ export const useHealthLogs = (params?: { limit?: number; offset?: number }) => {
 /**
  * Hook to fetch health logs for a specific endpoint
  */
-export const useEndpointHealthLogs = (endpointId: string, limit?: number) => {
+export const useEndpointHealthLogs = (endpointId: string, limit?: number, offset?: number) => {
     return useQuery({
-        queryKey: ['health-logs', 'endpoint', endpointId, limit],
-        queryFn: () => healthLogsApi.getByEndpoint({ endpointId, limit }),
+        queryKey: ['health-logs', 'endpoint', endpointId, limit, offset],
+        queryFn: () => healthLogsApi.getByEndpoint({ endpointId, limit, offset }),
         enabled: !!endpointId,
     });
 };

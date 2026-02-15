@@ -3,13 +3,21 @@ import { endpointsApi } from '@/lib/api/endpoints';
 import { CreateEndpointDto, UpdateEndpointDto } from '@/lib/types';
 import { POLLING_INTERVALS } from '@/lib/constants';
 
+interface UseEndpointsOptions {
+    limit?: number;
+    offset?: number;
+    endpointName?: string;
+}
+
 /**
- * Hook to fetch all endpoints with automatic polling
+ * Hook to fetch all endpoints with optional pagination, filtering, and automatic polling
  */
-export const useEndpoints = () => {
+export const useEndpoints = (options?: UseEndpointsOptions) => {
+    const { limit, offset, endpointName } = options || {};
+
     return useQuery({
-        queryKey: ['endpoints'],
-        queryFn: endpointsApi.getAll,
+        queryKey: ['endpoints', limit, offset, endpointName],
+        queryFn: () => endpointsApi.getAll({ limit, offset, endpointName }),
         refetchInterval: POLLING_INTERVALS.ENDPOINTS,
         refetchIntervalInBackground: true,
     });

@@ -8,9 +8,19 @@ import CreateEndpointDialog from '@/components/endpoints/CreateEndpointDialog';
 import EndpointActions from '@/components/endpoints/EndpointActions';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Input } from '@/components/ui/input';
 import { formatDuration } from '@/lib/utils/format';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useState, useEffect, useCallback } from 'react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const columns: ColumnDef<Endpoint>[] = [
     {
@@ -86,7 +96,35 @@ const columns: ColumnDef<Endpoint>[] = [
 ];
 
 export default function EndpointsPage() {
-    const { data: endpoints, isLoading } = useEndpoints();
+    const [limit, setLimit] = useState<number>(10);
+    const [offset, setOffset] = useState<number>(0);
+    const [searchInput, setSearchInput] = useState<string>('');
+    const debouncedSearch = useDebounce(searchInput, 500);
+    
+    const { data: endpoints, isLoading } = useEndpoints({ 
+        limit, 
+        offset, 
+        endpointName: debouncedSearch || "" 
+    });
+
+
+    // Pagination handlers
+    const currentPage = Math.floor(offset / limit) + 1;
+    const hasNextPage = endpoints && endpoints.length === limit;
+    const hasPrevPage = offset > 0;
+
+    const handleNextPage = useCallback(() => {
+        setOffset((prev) => prev + limit);
+    }, [limit]);
+
+    const handlePrevPage = useCallback(() => {
+        setOffset((prev) => Math.max(0, prev - limit));
+    }, [limit]);
+
+    const handleLimitChange = useCallback((newLimit: number) => {
+        setLimit(newLimit);
+        setOffset(0);
+    }, []);
 
     if (isLoading) {
         return (
@@ -113,8 +151,48 @@ export default function EndpointsPage() {
                 <CreateEndpointDialog />
             </div>
 
+            {/* Search & Controls */}
+            <div className="flex gap-4 items-center">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 h-4 w-4" />
+                    <Input
+                        placeholder="Search endpoints by name..."
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        className="pl-10 bg-slate-800/50 border-slate-700 text-white"
+                    />
+                </div>
+
+                {/* Per Page Selector */}
+                <Select
+                    value={String(limit)}
+                    onValueChange={(value) => handleLimitChange(Number(value))}
+                >
+                    <SelectTrigger className="w-[140px] bg-slate-800/50 border-slate-700 text-white">
+                        <SelectValue placeholder="Per page" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-900 border-slate-700 text-white">
+                        <SelectItem value="10">10 per page</SelectItem>
+                        <SelectItem value="25">25 per page</SelectItem>
+                        <SelectItem value="50">50 per page</SelectItem>
+                        <SelectItem value="100">100 per page</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
             {/* Endpoints Table */}
-            <DataTable columns={columns} data={endpoints || []} />
+            <DataTable 
+                columns={columns} 
+                data={endpoints || []}
+                currentPage={currentPage}
+                offset={offset}
+                limit={limit}
+                totalDisplayed={endpoints?.length || 0}
+                hasNextPage={hasNextPage}
+                hasPrevPage={hasPrevPage}
+                onNextPage={handleNextPage}
+                onPrevPage={handlePrevPage}
+            />
         </div>
     );
 }

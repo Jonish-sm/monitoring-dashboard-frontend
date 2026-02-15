@@ -70,7 +70,7 @@ export default function CreateEndpointDialog() {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger asChild className='cursor-pointer'>
                 <Button className="gradient-primary border-0 cursor-pointer">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Endpoint

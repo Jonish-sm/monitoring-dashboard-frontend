@@ -7,7 +7,6 @@ import {
     getCoreRowModel,
     getSortedRowModel,
     SortingState,
-    getFilteredRowModel,
     useReactTable,
 } from '@tanstack/react-table';
 import {
@@ -18,18 +17,35 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Pagination } from '@/components/ui/pagination';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    // Pagination props
+    currentPage?: number;
+    offset?: number;
+    limit?: number;
+    totalDisplayed?: number;
+    hasNextPage?: boolean;
+    hasPrevPage?: boolean;
+    onNextPage?: () => void;
+    onPrevPage?: () => void;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    currentPage,
+    offset,
+    limit,
+    totalDisplayed,
+    hasNextPage,
+    hasPrevPage,
+    onNextPage,
+    onPrevPage,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [globalFilter, setGlobalFilter] = React.useState('');
 
     const table = useReactTable({
         data,
@@ -37,26 +53,18 @@ export function DataTable<TData, TValue>({
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
-        onGlobalFilterChange: setGlobalFilter,
-        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting,
-            globalFilter,
         },
     });
 
+    const showPagination = currentPage !== undefined && 
+                          offset !== undefined && 
+                          limit !== undefined && 
+                          totalDisplayed !== undefined;
+
     return (
         <div className="space-y-4">
-            {/* Search */}
-            <div>
-                <input
-                    placeholder="Search endpoints..."
-                    value={globalFilter ?? ''}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    className="w-full max-w-sm px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-
             {/* Table */}
             <div className="rounded-lg border border-slate-800/50 overflow-hidden glass">
                 <Table>
@@ -100,6 +108,22 @@ export function DataTable<TData, TValue>({
                         )}
                     </TableBody>
                 </Table>
+
+                {/* Pagination */}
+                {showPagination && (
+                    <div className="p-4 border-t border-slate-800/50">
+                        <Pagination
+                            currentPage={currentPage}
+                            offset={offset}
+                            limit={limit}
+                            totalDisplayed={totalDisplayed}
+                            hasNextPage={hasNextPage || false}
+                            hasPrevPage={hasPrevPage || false}
+                            onNextPage={onNextPage || (() => {})}
+                            onPrevPage={onPrevPage || (() => {})}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

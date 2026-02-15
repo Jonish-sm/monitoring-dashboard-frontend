@@ -19,7 +19,7 @@ import {
 
 export default function LogsPage() {
   const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(50);
+  const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
 
   const { data: logs, isLoading } = useHealthLogs({ limit, offset });
@@ -83,9 +83,9 @@ export default function LogsPage() {
             <SelectValue placeholder="Per page" />
           </SelectTrigger>
           <SelectContent className="bg-slate-900 border-slate-700 text-white">
+            <SelectItem value="10">10 per page</SelectItem>
             <SelectItem value="25">25 per page</SelectItem>
             <SelectItem value="50">50 per page</SelectItem>
-            <SelectItem value="100">100 per page</SelectItem>
           </SelectContent>
         </Select>
       </div>

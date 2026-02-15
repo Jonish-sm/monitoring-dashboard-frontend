@@ -22,7 +22,7 @@ import {
 
 export default function AlertsPage() {
     const [filter, setFilter] = useState<'all' | 'unacknowledged' | 'acknowledged'>('all');
-    const [limit, setLimit] = useState(25);
+    const [limit, setLimit] = useState(10);
     const [offset, setOffset] = useState(0);
 
     // Fetch data with pagination
