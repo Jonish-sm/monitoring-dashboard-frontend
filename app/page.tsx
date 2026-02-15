@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const { data: endpoints, isLoading: endpointsLoading } = useEndpoints();
-  const { data: alerts, isLoading: alertsLoading } = useAlerts({ acknowledged: false });
+  const { data: alerts, isLoading: alertsLoading } = useAlerts({ acknowledged: false, limit: 5, offset: 1 });
 
   const totalEndpoints = endpoints?.length || 0;
   const activeEndpoints = endpoints?.filter(e => e.isActive).length || 0;

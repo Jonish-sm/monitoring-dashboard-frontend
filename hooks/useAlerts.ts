@@ -5,7 +5,11 @@ import { POLLING_INTERVALS } from '@/lib/constants';
 /**
  * Hook to fetch all alerts with optional filtering
  */
-export const useAlerts = (params?: { acknowledged?: boolean; limit?: number }) => {
+export const useAlerts = (params?: { 
+    acknowledged?: boolean; 
+    limit?: number; 
+    offset?: number;
+}) => {
     return useQuery({
         queryKey: ['alerts', params],
         queryFn: () => alertsApi.getAll(params),

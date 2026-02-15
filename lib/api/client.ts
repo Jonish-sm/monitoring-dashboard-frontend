@@ -12,7 +12,7 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
         // Log error for debugging
-        console.error('API Error:', error.response?.data || error.message);
+        console?.error('API Error:', error?.response?.data || error?.message);
 
         // You can add global error handling here
         // For example, redirect to login on 401, show toast notifications, etc.

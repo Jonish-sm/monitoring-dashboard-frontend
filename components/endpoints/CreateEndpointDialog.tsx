@@ -71,7 +71,7 @@ export default function CreateEndpointDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="gradient-primary border-0">
+                <Button className="gradient-primary border-0 cursor-pointer">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Endpoint
                 </Button>
@@ -87,7 +87,7 @@ export default function CreateEndpointDialog() {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         {/* Name */}
-                        <FormField
+                        <FormField 
                             control={form.control}
                             name="name"
                             render={({ field }) => (
