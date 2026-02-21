@@ -13,6 +13,7 @@ import { formatDuration } from '@/lib/utils/format';
 import { ArrowUpDown, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import {
     Select,
     SelectContent,
@@ -100,11 +101,11 @@ export default function EndpointsPage() {
     const [offset, setOffset] = useState<number>(0);
     const [searchInput, setSearchInput] = useState<string>('');
     const debouncedSearch = useDebounce(searchInput, 500);
-    
-    const { data: endpoints, isLoading } = useEndpoints({ 
-        limit, 
-        offset, 
-        endpointName: debouncedSearch || "" 
+
+    const { data: endpoints, isLoading } = useEndpoints({
+        limit,
+        offset,
+        endpointName: debouncedSearch || ""
     });
 
 
@@ -139,7 +140,12 @@ export default function EndpointsPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+        >
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
@@ -181,8 +187,8 @@ export default function EndpointsPage() {
             </div>
 
             {/* Endpoints Table */}
-            <DataTable 
-                columns={columns} 
+            <DataTable
+                columns={columns}
                 data={endpoints || []}
                 currentPage={currentPage}
                 offset={offset}
@@ -193,6 +199,6 @@ export default function EndpointsPage() {
                 onNextPage={handleNextPage}
                 onPrevPage={handlePrevPage}
             />
-        </div>
+        </motion.div>
     );
 }

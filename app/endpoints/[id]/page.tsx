@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import StatsCard from "@/components/dashboard/StatsCard";
+import ResponseTimeChart from "@/components/dashboard/ResponseTimeChart";
 import { Activity, Clock, TrendingUp, CheckCircle2 } from "lucide-react";
 import {
   formatDate,
@@ -148,11 +149,10 @@ export default function EndpointDetailPage({ params }: PageProps) {
             onClick={() => setTimeRange(range.value)}
             className={`
     cursor-pointer transition-colors
-    ${
-      timeRange === range.value
-        ? "gradient-primary border-0 text-white hover:opacity-90"
-        : "border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white"
-    }
+    ${timeRange === range.value
+                ? "gradient-primary border-0 text-white hover:opacity-90"
+                : "border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white"
+              }
   `}
           >
             {range.label}
@@ -200,6 +200,15 @@ export default function EndpointDetailPage({ params }: PageProps) {
             }
           />
         </div>
+      )}
+
+      {/* Response Time Chart */}
+      {healthLogs && healthLogs.length > 0 && (
+        <ResponseTimeChart
+          healthLogs={healthLogs}
+          title="Response Time Trend"
+          height={300}
+        />
       )}
 
       {/* Recent Health Logs */}

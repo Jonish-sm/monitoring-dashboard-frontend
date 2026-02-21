@@ -2,24 +2,29 @@
 
 import { useEndpoints } from '@/hooks/useEndpoints';
 import { useAlerts } from '@/hooks/useAlerts';
+import { useHealthLogs } from '@/hooks/useHealthLogs';
 import StatsCard from '@/components/dashboard/StatsCard';
 import StatusGrid from '@/components/dashboard/StatusGrid';
 import RecentAlerts from '@/components/dashboard/RecentAlerts';
 import UptimeChart from '@/components/dashboard/UptimeChart';
 import { Globe, Activity, AlertTriangle, TrendingUp } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const { data: endpoints, isLoading: endpointsLoading } = useEndpoints();
   const { data: alerts, isLoading: alertsLoading } = useAlerts({ acknowledged: false, limit: 5, offset: 1 });
+  const { data: healthLogs, isLoading: logsLoading } = useHealthLogs({ limit: 100, offset: 0 });
 
   const totalEndpoints = endpoints?.length || 0;
   const activeEndpoints = endpoints?.filter(e => e.isActive).length || 0;
   const unacknowledgedAlerts = alerts?.length || 0;
 
-  // Calculate average uptime (placeholder - would need real analytics data)
-  const averageUptime = 99.5;
+  // Calculate real average uptime from health logs
+  const averageUptime = (() => {
+    if (!healthLogs || healthLogs.length === 0) return 0;
+    const successCount = healthLogs.filter(log => log.success).length;
+    return (successCount / healthLogs.length) * 100;
+  })();
 
   if (endpointsLoading || alertsLoading) {
     return (
@@ -70,15 +75,15 @@ export default function DashboardPage() {
         />
         <StatsCard
           title="Average Uptime"
-          value={`${averageUptime}%`}
+          value={`${averageUptime.toFixed(1)}%`}
           icon={TrendingUp}
-          description="Last 24 hours"
+          description="Based on recent checks"
           gradient="gradient-success"
         />
       </div>
 
       {/* Uptime Chart */}
-      <UptimeChart />
+      <UptimeChart healthLogs={healthLogs} />
 
       {/* Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

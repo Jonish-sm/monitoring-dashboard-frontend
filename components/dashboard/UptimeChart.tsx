@@ -1,26 +1,48 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import { HealthLog } from '@/lib/types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { format } from 'date-fns';
 
-// Placeholder data - in real app, this would come from API
-const generateMockData = () => {
-    const data = [];
-    const now = Date.now();
-    for (let i = 24; i >= 0; i--) {
-        data.push({
-            time: new Date(now - i * 60 * 60 * 1000).toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-            }),
-            uptime: 95 + Math.random() * 5,
-        });
+interface UptimeChartProps {
+    healthLogs?: HealthLog[];
+}
+
+function computeUptimeByHour(logs: HealthLog[]) {
+    // Group logs by hour
+    const hourMap = new Map<string, { total: number; success: number }>();
+
+    for (const log of logs) {
+        const hourKey = format(new Date(log.checkedAt), 'HH:mm');
+        const entry = hourMap.get(hourKey) || { total: 0, success: 0 };
+        entry.total++;
+        if (log.success) entry.success++;
+        hourMap.set(hourKey, entry);
     }
-    return data;
-};
 
-export default function UptimeChart() {
-    const data = generateMockData();
+    // Convert to chart data sorted by time
+    return Array.from(hourMap.entries())
+        .map(([time, { total, success }]) => ({
+            time,
+            uptime: total > 0 ? (success / total) * 100 : 100,
+        }));
+}
+
+export default function UptimeChart({ healthLogs }: UptimeChartProps) {
+    const hasRealData = healthLogs && healthLogs.length > 0;
+    const data = hasRealData ? computeUptimeByHour(healthLogs) : [];
+
+    if (data.length === 0) {
+        return (
+            <Card className="p-6 glass border-slate-800/50">
+                <h3 className="text-lg font-semibold text-white mb-4">Overall Uptime (24h)</h3>
+                <div className="flex items-center justify-center h-[200px] text-slate-500">
+                    No uptime data available yet
+                </div>
+            </Card>
+        );
+    }
 
     return (
         <Card className="p-6 glass border-slate-800/50">

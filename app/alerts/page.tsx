@@ -12,12 +12,13 @@ import { Pagination } from '@/components/ui/pagination';
 import { formatDate } from '@/lib/utils/format';
 import { CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 
 export default function AlertsPage() {
@@ -27,15 +28,15 @@ export default function AlertsPage() {
 
     // Fetch data with pagination
     const { data: allAlerts, isLoading: loadingAll } = useAlerts({ limit, offset });
-    const { data: unacknowledgedAlerts, isLoading: loadingUnack } = useAlerts({ 
-        acknowledged: false, 
-        limit, 
-        offset 
+    const { data: unacknowledgedAlerts, isLoading: loadingUnack } = useAlerts({
+        acknowledged: false,
+        limit,
+        offset
     });
-    const { data: acknowledgedAlerts, isLoading: loadingAck } = useAlerts({ 
-        acknowledged: true, 
-        limit, 
-        offset 
+    const { data: acknowledgedAlerts, isLoading: loadingAck } = useAlerts({
+        acknowledged: true,
+        limit,
+        offset
     });
     const acknowledgeAlert = useAcknowledgeAlert();
 
@@ -120,7 +121,12 @@ export default function AlertsPage() {
     };
 
     return (
-        <div className="space-y-6">
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+        >
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-white mb-2">Alerts</h1>
@@ -243,6 +249,6 @@ export default function AlertsPage() {
                     </Card>
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 }

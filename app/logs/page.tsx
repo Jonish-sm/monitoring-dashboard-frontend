@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/pagination";
 import { formatDate, formatResponseTime } from "@/lib/utils/format";
 import { Search } from "lucide-react";
+import { motion } from 'framer-motion';
 import {
   Select,
   SelectContent,
@@ -58,7 +59,12 @@ export default function LogsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Health Logs</h1>
         <p className="text-slate-400">View all endpoint health check logs</p>
@@ -179,6 +185,6 @@ export default function LogsPage() {
           <p className="text-center text-slate-500 py-12">No logs found</p>
         )}
       </Card>
-    </div>
+    </motion.div>
   );
 }
